@@ -8,7 +8,6 @@ class Type(Enum):
     EXTENSION = 1
     DANGER = 2
 
-
 # 获取当前迭代列表
 def get_iteration_info():
     result = tapd.get_iteration()
@@ -24,7 +23,6 @@ def get_iteration_info():
             iteration_arr.append(iteration)
     return iteration_arr
 
-
 # 获取迭代需求列表
 def get_story_info(iteration):
     result = tapd.get_iteration_story(iteration)
@@ -34,7 +32,6 @@ def get_story_info(iteration):
     for story in result_data:
         story_arr.append(story['Story'])
     return story_arr
-
 
 # 获取需求任务列表
 def get_task_info(iteration, story, type):
@@ -57,7 +54,6 @@ def get_task_info(iteration, story, type):
                       task['due'])
     return
 
-
 # 获取需求用例
 def get_tcase_info(iteration):
     result = tapd.get_story_tcase(iteration)
@@ -65,7 +61,6 @@ def get_tcase_info(iteration):
     rd = rj['data']
     for tcase in rd:
         print(tcase)
-
 
 # 实现功能
 def get_exception_info():
