@@ -53,13 +53,23 @@ def get_story_tasks(iteration, story):
 
 
 # 获取需求对应测试用例
-def get_story_tcase(iteration):
-    url = api + 'test_plans'
-    print(iteration['name'])
+def get_story_tcase(iteration, story):
+    url = api + 'stories/get_story_tcase'
     param = {
-        'version': iteration['name'],
+        'story_id': story['id'],
         'limit': 50,
         'workspace_id': iteration['workspace_id'],
+    }
+    response = requests.get(url, params=param, headers=head, auth=(account, password))
+    return response.text
+
+
+# 获取测试用例
+def get_tcase(iteration, tcase):
+    url = api + 'tcases'
+    param = {
+        'workspace_id': iteration['workspace_id'],
+        'id': tcase['tcase_id']
     }
     response = requests.get(url, params=param, headers=head, auth=(account, password))
     return response.text
