@@ -19,9 +19,10 @@ def get_iteration_info():
     if 'data' in res_dict:
         for data in res_dict['data']:
             iteration = data['Iteration']
+            bug_iteration_id = '1131316618001000340' # 屏蔽线上bug迭代
             start_date = timer.struct_time(iteration['startdate'])
             end_date = timer.struct_time(iteration['enddate'])
-            if start_date < time.time() < end_date:
+            if iteration['id'] != bug_iteration_id and start_date < time.time() < end_date:
                 iteration_arr.append(iteration)
     return iteration_arr
 
@@ -38,26 +39,16 @@ def get_story_info(iteration):
 
 
 # 获取需求任务列表
-def get_task_info(iteration, story, type):
+def get_task_info(iteration, story):
     result = tapd.get_story_tasks(iteration=iteration, story=story)
     result_dict = json.loads(result)
     result_data = result_dict['data']
+    task_arr = []
     for data in result_data:
         task = data['Task']
-        if task['due'] is not None:
-            end_time = int(timer.struct_time(task['due']))
-            if task['status'] == 'done':
-                print('done')
-                continue
-            if type == Type.EXTENSION and timer.get_today_zero() > end_time:
-                # 已经延期的 08:30 执行
-                day = int((timer.get_today_zero() - end_time) / 86400)
-                print('已经延期的', iteration['name'], story['name'], task['owner'], task['name'], '延期', day, '天')
-            if type == Type.DANGER and timer.get_today_zero() == end_time:
-                # 当天结束目前还未完成 18:00 执行
-                print('当天结束目前还未完成', iteration['name'], story['name'], task['owner'], task['name'],
-                      task['due'])
-    return
+        task_arr.append(task)
+
+    return task_arr
 
 
 # 获取需求对应的测试用例关联关系
@@ -87,19 +78,3 @@ def get_tcase_info(iteration, tcase):
         if case['priority'] == 'P0':
             return case
     return None
-
-
-# 实现功能
-def get_exception_info():
-    iteration_arr = get_iteration_info()
-    for iteration in iteration_arr:
-        story_arr = get_story_info(iteration)
-        for story in story_arr:
-            get_task_info(iteration, story, Type.EXTENSION)
-            # tcase0_arr = get_story_test_info(iteration, story)
-            # print(story)
-            # print(tcase0_arr)
-            # print(len(tcase0_arr), '\n')
-
-
-get_exception_info()
