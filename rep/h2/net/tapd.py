@@ -45,7 +45,7 @@ def get_story_tasks(iteration, story):
     param = {
         'iteration_id': iteration['id'],
         'story_id': story['id'],
-        'limit': 50,
+        'limit': 100,
         'workspace_id': iteration['workspace_id'],
     }
     response = requests.get(url, params=param, headers=head, auth=(account, password))
