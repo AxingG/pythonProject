@@ -10,6 +10,12 @@ def get_iteration_our(people, days):
   D：5人
   π：5人
 '''
+dy_owner = {'王奕娇;', '王媛;', '高强;', '侯维维;', '林军;', '贾宇光;', '张伟;', '高哲;', '徐培帅;', '曹永胜;'}
+df_owner = {'秦浩楠;', '万雪婷;', '李正祥;', '王成斌;', '苏帅龙;'}
+pi_owner = {'吴华友;', '徐培帅;', '乔天良;', '马廉;', '张梦佳;'}
+
+dy_stand_time = 8 * 17
+df_stand_time = 8 * 12
 
 
 # 检查具体需求里面的某个人的异常
@@ -95,19 +101,35 @@ def get_iteration_task_time(business_owner_dict, iteration, story):
     return business_owner_dict
 
 
+def get_owner_time(owner_dict):
+    get_time = 0
+    get_time_pi = 0
+    for key in owner_dict:
+        effect = owner_dict[key]
+        if key in dy_owner:
+            time = effect - dy_stand_time
+            if time != 0:
+                get_time += time
+                print(key, time)
+        elif key in df_owner:
+            time = effect - df_stand_time
+            if time != 0:
+                get_time += time
+                print(key, time)
+        else:
+            get_time_pi += effect
+            print(key, effect)
+    print(get_time, get_time_pi)
+
+
 def get_iteration_standard_percent():
     # DY V9.28 2月2日 - 2月24日
-    dy_hour = get_iteration_our(10, 17) + 8 * 8 + 4
+    dy_hour = get_iteration_our(10, 17)
     # DF V1.1 V1.8 2月2日 - 2月17日
     df_hour = get_iteration_our(5, 12)
 
-    dy_percent = str(round(dy_hour / (dy_hour + df_hour) * 100)) + '%'
-    df_percent = str(round(df_hour / (dy_hour + df_hour) * 100)) + '%'
-
     print('DY', dy_hour, '工时')
     print('DF', df_hour, '工时')
-    print('DY', dy_percent)
-    print('DF', df_percent)
 
 
 def get_story_standard_percent():
@@ -129,24 +151,29 @@ def get_story_standard_percent():
     # 获取DY迭代每个人的工时
     dy_owner_time = get_iteration_owner_time('DY-', business_owner_dict)
     print(dy_owner_time)
-
+    # 获取D迭代总工时
+    d_time = get_iteration_time('D-', business_dict)
+    print('d', d_time)
+    # 获取D迭代每个人的工时
+    d_owner_time = get_iteration_owner_time('D-', business_owner_dict)
+    print(d_owner_time)
+    # 获取所有人的总工时 DY 136 D 96
+    owner_dict = {}
+    for key in dy_owner_time:
+        if key in owner_dict:
+            owner_dict[key] = owner_dict[key] + dy_owner_time[key]
+        else:
+            owner_dict[key] = dy_owner_time[key]
+    for key in d_owner_time:
+        if key in owner_dict:
+            owner_dict[key] = owner_dict[key] + d_owner_time[key]
+        else:
+            owner_dict[key] = d_owner_time[key]
+    print(owner_dict)
+    get_owner_time(owner_dict)
 
 
 # 迭代总工时 DY、DF占比
 get_iteration_standard_percent()
 # DY、DF 各自的占比
 get_story_standard_percent()
-
-# if task['due'] is not None:
-#     end_time = int(timer.struct_time(task['due']))
-#     if task['status'] == 'done':
-#         print('done')
-#         continue
-#     if type == Type.EXTENSION and timer.get_today_zero() > end_time:
-#         # 已经延期的 08:30 执行
-#         day = int((timer.get_today_zero() - end_time) / 86400)
-#         print('已经延期的', iteration['name'], story['name'], task['owner'], task['name'], '延期', day, '天')
-#     if type == Type.DANGER and timer.get_today_zero() == end_time:
-#         # 当天结束目前还未完成 18:00 执行
-#         print('当天结束目前还未完成', iteration['name'], story['name'], task['owner'], task['name'],
-#               task['due'])

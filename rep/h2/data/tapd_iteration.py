@@ -19,7 +19,7 @@ def get_iteration_info():
     if 'data' in res_dict:
         for data in res_dict['data']:
             iteration = data['Iteration']
-            bug_iteration_id = '1131316618001000340' # 屏蔽线上bug迭代
+            bug_iteration_id = '1131316618001000340'  # 屏蔽线上bug迭代
             start_date = timer.struct_time(iteration['startdate'])
             end_date = timer.struct_time(iteration['enddate'])
             if iteration['id'] != bug_iteration_id and start_date < time.time() < end_date:
@@ -42,8 +42,10 @@ def get_story_info(iteration):
 def get_task_info(iteration, story):
     result = tapd.get_story_tasks(iteration=iteration, story=story)
     result_dict = json.loads(result)
-    result_data = result_dict['data']
     task_arr = []
+    if 'data' not in result_dict:
+        return task_arr
+    result_data = result_dict['data']
     for data in result_data:
         task = data['Task']
         task_arr.append(task)
