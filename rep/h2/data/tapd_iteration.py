@@ -43,6 +43,9 @@ def get_task_info(iteration, story):
     result = tapd.get_story_tasks(iteration=iteration, story=story)
     result_dict = json.loads(result)
     task_arr = []
+    if 'error_msg' in result_dict:
+        print(result_dict, story['name'])
+        return task_arr
     if 'data' not in result_dict:
         return task_arr
     result_data = result_dict['data']

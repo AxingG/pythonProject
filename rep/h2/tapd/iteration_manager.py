@@ -1,3 +1,4 @@
+import time
 from rep.h2.data import tapd_iteration
 
 
@@ -141,6 +142,8 @@ def get_story_standard_percent():
         for story in story_array:
             # 添加产研线对应工时
             business_dict = add_story_dict(story, business_dict)
+            # 请求过于频繁会返回 Too Many Request 错误，所以这里添加等待逻辑
+            time.sleep(1.5)
             # 添加产研线对应员工的对应工时
             business_owner_dict = get_iteration_task_time(business_owner_dict, iteration, story)
     print(business_dict)
