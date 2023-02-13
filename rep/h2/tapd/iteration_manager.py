@@ -140,8 +140,8 @@ def get_story_standard_percent():
     for iteration in iteration_arr:
         story_array = tapd_iteration.get_story_info(iteration)
         for story in story_array:
-            # 添加产研线对应工时
-            business_dict = add_story_dict(story, business_dict)
+            # # 添加产研线对应工时
+            # business_dict = add_story_dict(story, business_dict)
             # 请求过于频繁会返回 Too Many Request 错误，所以这里添加等待逻辑
             time.sleep(1.5)
             # 添加产研线对应员工的对应工时
@@ -176,7 +176,8 @@ def get_story_standard_percent():
     get_owner_time(owner_dict)
 
 
-# 迭代总工时 DY、DF占比
-get_iteration_standard_percent()
-# DY、DF 各自的占比
-get_story_standard_percent()
+def get_time():
+    # 迭代总工时 DY、DF占比
+    get_iteration_standard_percent()
+    # DY、DF 各自的占比
+    get_story_standard_percent()

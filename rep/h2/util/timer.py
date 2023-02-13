@@ -1,5 +1,6 @@
 import time
 
+
 # 时间结构化
 def struct_time(date):
     struct_t = time.strptime(date, '%Y-%m-%d')
