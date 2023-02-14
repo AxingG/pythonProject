@@ -1,5 +1,5 @@
 import time
-from rep.h2.data import tapd_iteration
+from rep.h2.data import tapd_parse
 
 
 def get_iteration_our(people, days):
@@ -25,7 +25,7 @@ def get_story_time(iteration, story):
     name = story['name']
     if business_line != 'DY-商业线' or '需求5' not in name:
         return
-    task_arr = tapd_iteration.get_task_info(iteration, story)
+    task_arr = tapd_parse.get_task_info(iteration, story)
     story_time = story['effort']
     task_time = 0
     owner_dict = {}
@@ -83,7 +83,7 @@ def get_iteration_owner_time(iteration_name, business_owner_dict):
 def get_iteration_task_time(business_owner_dict, iteration, story):
     business_line = story['custom_field_six']
     owner_dict = {}
-    task_arr = tapd_iteration.get_task_info(iteration, story)
+    task_arr = tapd_parse.get_task_info(iteration, story)
     # 如果已经存在该产研线，取出字段直接操作
     if business_line in business_owner_dict:
         owner_dict = business_owner_dict[business_line]

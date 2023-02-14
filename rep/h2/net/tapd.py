@@ -33,7 +33,7 @@ def get_iteration_story(iteration):
     param = {
         'iteration_id': iteration['id'],
         'limit': 50,
-        'workspace_id': iteration['workspace_id'],
+        'workspace_id': workspace_id,
     }
     response = requests.get(url, params=param, headers=head, auth=(account, password))
     return response.text
@@ -46,7 +46,7 @@ def get_story_tasks(iteration, story):
         'iteration_id': iteration['id'],
         'story_id': story['id'],
         'limit': 100,
-        'workspace_id': iteration['workspace_id'],
+        'workspace_id': workspace_id,
     }
     response = requests.get(url, params=param, headers=head, auth=(account, password))
     return response.text
@@ -58,7 +58,7 @@ def get_story_tcase(iteration, story):
     param = {
         'story_id': story['id'],
         'limit': 50,
-        'workspace_id': iteration['workspace_id'],
+        'workspace_id': workspace_id,
     }
     response = requests.get(url, params=param, headers=head, auth=(account, password))
     return response.text
@@ -68,7 +68,7 @@ def get_story_tcase(iteration, story):
 def get_tcase(iteration, tcase):
     url = api + 'tcases'
     param = {
-        'workspace_id': iteration['workspace_id'],
+        'workspace_id': workspace_id,
         'id': tcase['tcase_id']
     }
     response = requests.get(url, params=param, headers=head, auth=(account, password))

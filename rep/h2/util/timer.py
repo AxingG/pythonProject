@@ -1,3 +1,4 @@
+from datetime import datetime
 import time
 
 
@@ -17,3 +18,7 @@ def get_today_zero():
     now_time = int(time.time())
     day_time = now_time - now_time % 86400 + time.timezone
     return day_time
+
+
+def get_date(t_str):
+    return datetime.strptime(t_str, '%Y-%m-%d')
