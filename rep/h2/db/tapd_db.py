@@ -28,6 +28,8 @@ task_update_sql = """update tapd_task set owner = %s, effort = %s, product_line 
               story_id = %s, iteration_id = %s, update_at = %s, begin = %s, due = %s
               WHERE task_id = %s"""
 
+data_delete_sql = """delete from tapd_task where begin >= %s and begin <= %s"""
+
 
 def iterationInsertOrUpdate(iterations):
     if len(iterations) == 0:
@@ -46,7 +48,7 @@ def iterationInsertOrUpdate(iterations):
         elif iteration.checkInfo(result):
             # update 数据
             result = sql(db, iteration_update_sql, (iteration.name, iteration.start, iteration.end,
-                                                    iteration.update_at, iteration.task_id))
+                                                    iteration.update_at, iteration.iteration_id))
             print('iteration_update', iteration.iteration_id, result)
         else:
             print('iteration_none')
@@ -104,6 +106,15 @@ def taskInsertOrUpdate(tasks):
         else:
             print('task_none', task.task_id)
     db.close()
+
+
+def deleteTaskByDate(start, end):
+    if start == 0 or end == 0 or start > end:
+        print("时间错误")
+        return
+    db = mysql.connector.connect(**dbconfig)
+    result = sql(db, data_delete_sql, (start, end))
+    print('task_delete', result)
 
 
 def sql(db, operation, params=()):

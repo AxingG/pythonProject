@@ -27,11 +27,34 @@ def get_iteration():
     return response.text
 
 
+def get_iteration_by_id(iteration_id):
+    url = api + 'iterations'
+    param = {
+        'limit': 5,
+        'id': iteration_id,
+        'workspace_id': workspace_id,
+    }
+    response = requests.get(url, params=param, headers=head, auth=(account, password))
+    return response.text
+
+
 # 获取需求列表
 def get_iteration_story(iteration):
     url = api + 'stories'
     param = {
         'iteration_id': iteration['id'],
+        'limit': 50,
+        'workspace_id': workspace_id,
+    }
+    response = requests.get(url, params=param, headers=head, auth=(account, password))
+    return response.text
+
+
+# 获取需求列表
+def get_story_by_id(story_id):
+    url = api + 'stories'
+    param = {
+        'id': story_id,
         'limit': 50,
         'workspace_id': workspace_id,
     }
@@ -45,6 +68,18 @@ def get_story_tasks(iteration, story):
     param = {
         'iteration_id': iteration['id'],
         'story_id': story['id'],
+        'limit': 100,
+        'workspace_id': workspace_id,
+    }
+    response = requests.get(url, params=param, headers=head, auth=(account, password))
+    return response.text
+
+
+# 获取任务列表
+def get_story_tasks_by_date(date):
+    url = api + 'tasks'
+    param = {
+        'begin': date,
         'limit': 100,
         'workspace_id': workspace_id,
     }
