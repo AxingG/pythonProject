@@ -28,6 +28,9 @@ task_update_sql = """update tapd_task set owner = %s, effort = %s, product_line 
               story_id = %s, iteration_id = %s, update_at = %s, begin = %s, due = %s
               WHERE task_id = %s"""
 
+effort_insert_sql = """insert into tapd_effort(owner, add_effort, leave_effort, time_at, create_at, update_at)
+                     VALUES (%s, %s, %s, %s, %s, %s)"""
+
 data_delete_sql = """delete from tapd_task where begin >= %s and begin <= %s"""
 
 
@@ -117,12 +120,20 @@ def deleteTaskByDate(start, end):
     print('task_delete', result)
 
 
+def ownerInsert(owner_info):
+    db = mysql.connector.connect(**dbconfig)
+    result = sql(db, effort_insert_sql, (owner_info.owner, owner_info.add_effort, owner_info.leave_effort,
+                                         owner_info.time_at, owner_info.create_at, owner_info.update_at))
+    print('owner_insert', result)
+
+
 def sql(db, operation, params=()):
     course = db.cursor()
     try:
         course.execute(operation, params)
         db.commit()
         return True
-    except:
+    except Exception as e:
+        print(str(e))
         db.rollback()
         return False

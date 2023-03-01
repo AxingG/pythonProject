@@ -91,3 +91,16 @@ class Task:
         if self.due != tup[11]:
             return True
         return False
+
+
+class Owner:
+    owner = str
+    add_effort = float
+    leave_effort = float
+    time_at = int
+    create_at = int
+    update_at = int
+
+    def __init__(self):
+        self.create_at = int(time.time())
+        self.update_at = int(time.time())
