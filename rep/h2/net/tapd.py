@@ -4,7 +4,7 @@ import requests
 account = 'jzqTCJcw'
 password = '00274031-3483-B352-75F0-19B14C3B69FA'
 workspace_id = 31316618
-iteration_status = 'open'
+open_status = 'open'
 
 api = 'https://api.tapd.cn/'
 
@@ -14,20 +14,7 @@ head = {
 }
 
 
-# 获取迭代列表
-def get_iteration():
-    url = api + 'iterations'
-    param = {
-        'limit': 5,
-        'status': iteration_status,
-        'workspace_id': workspace_id,
-        'order': 'startdate desc',
-    }
-    response = requests.get(url, params=param, headers=head, auth=(account, password))
-    return response.text
-
-
-def get_iteration_by_id(iteration_id):
+def get_iteration(iteration_id):
     url = api + 'iterations'
     param = {
         'limit': 5,
@@ -39,19 +26,7 @@ def get_iteration_by_id(iteration_id):
 
 
 # 获取需求列表
-def get_iteration_story(iteration):
-    url = api + 'stories'
-    param = {
-        'iteration_id': iteration['id'],
-        'limit': 50,
-        'workspace_id': workspace_id,
-    }
-    response = requests.get(url, params=param, headers=head, auth=(account, password))
-    return response.text
-
-
-# 获取需求列表
-def get_story_by_id(story_id):
+def get_story(story_id):
     url = api + 'stories'
     param = {
         'id': story_id,
@@ -62,12 +37,11 @@ def get_story_by_id(story_id):
     return response.text
 
 
-# 获取任务列表
-def get_story_tasks(iteration, story):
+def get_tasks(owner):
     url = api + 'tasks'
     param = {
-        'iteration_id': iteration['id'],
-        'story_id': story['id'],
+        'owner': owner,
+        'status': open_status,
         'limit': 100,
         'workspace_id': workspace_id,
     }
@@ -82,29 +56,6 @@ def get_story_tasks_by_date(date):
         'begin': date,
         'limit': 100,
         'workspace_id': workspace_id,
-    }
-    response = requests.get(url, params=param, headers=head, auth=(account, password))
-    return response.text
-
-
-# 获取需求对应测试用例
-def get_story_tcase(iteration, story):
-    url = api + 'stories/get_story_tcase'
-    param = {
-        'story_id': story['id'],
-        'limit': 50,
-        'workspace_id': workspace_id,
-    }
-    response = requests.get(url, params=param, headers=head, auth=(account, password))
-    return response.text
-
-
-# 获取测试用例
-def get_tcase(iteration, tcase):
-    url = api + 'tcases'
-    param = {
-        'workspace_id': workspace_id,
-        'id': tcase['tcase_id']
     }
     response = requests.get(url, params=param, headers=head, auth=(account, password))
     return response.text
