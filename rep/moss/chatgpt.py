@@ -82,7 +82,7 @@ def main():
         # 提问-回答-记录
         chat.messages.append({"role": "user", "content": q})
         answer = chat.ask_gpt()
-        print(f"【ChatGPT】{answer}")
+        print(f"【ChatGPT】：{answer}")
         chat.messages.append({"role": "assistant", "content": answer})
 
 
