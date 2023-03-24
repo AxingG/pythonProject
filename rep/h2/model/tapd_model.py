@@ -100,6 +100,7 @@ class Owner:
     time_at = int
     create_at = int
     update_at = int
+    department = int
 
     def __init__(self):
         self.create_at = int(time.time())

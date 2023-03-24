@@ -25,11 +25,10 @@ task_insert_sql = """insert into tapd_task(task_id, owner, effort, product_line,
                       product_type, story_id, iteration_id, created_at, update_at, begin, due)
                      VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 task_update_sql = """update tapd_task set owner = %s, effort = %s, product_line = %s, product_type = %s, 
-              story_id = %s, iteration_id = %s, update_at = %s, begin = %s, due = %s
-              WHERE task_id = %s"""
+                        story_id = %s, iteration_id = %s, update_at = %s, begin = %s, due = %s WHERE task_id = %s"""
 
-effort_insert_sql = """insert into tapd_effort(owner, add_effort, leave_effort, time_at, create_at, update_at)
-                     VALUES (%s, %s, %s, %s, %s, %s)"""
+effort_insert_sql = """insert into tapd_effort(owner, add_effort, leave_effort, department, time_at, create_at, 
+                        update_at) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
 data_delete_sql = """delete from tapd_task where begin >= %s and begin <= %s"""
 
@@ -122,8 +121,9 @@ def deleteTaskByDate(start, end):
 
 def ownerInsert(owner_info):
     db = mysql.connector.connect(**dbconfig)
-    result = sql(db, effort_insert_sql, (owner_info.owner, owner_info.add_effort, owner_info.leave_effort,
-                                         owner_info.time_at, owner_info.create_at, owner_info.update_at))
+    result = sql(db, effort_insert_sql,
+                 (owner_info.owner, owner_info.add_effort, owner_info.leave_effort, owner_info.department,
+                  owner_info.time_at, owner_info.create_at, owner_info.update_at))
     print('owner_insert', result)
 
 
