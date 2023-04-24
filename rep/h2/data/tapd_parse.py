@@ -17,6 +17,16 @@ def get_task_iteration(iteration_id):
             return data['Iteration']
 
 
+def get_open_iteration():
+    result = tapd.get_open_iteration()
+    res_dict = json.loads(result)
+    iteration_arr = []
+    if 'data' in res_dict:
+        for data in res_dict['data']:
+            iteration_arr.append(data)
+    return iteration_arr
+
+
 # 获取迭代需求列表
 def get_task_story(story_id):
     result = tapd.get_story(story_id)

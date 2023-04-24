@@ -34,4 +34,10 @@ def get_tasks(num):
             print(name, max_end)
 
 
-get_tasks(20230316)
+def get_open_iter():
+    iter_arr = tapd_parse.get_open_iteration()
+    for iter in iter_arr:
+        print(iter)
+
+
+get_open_iter()
