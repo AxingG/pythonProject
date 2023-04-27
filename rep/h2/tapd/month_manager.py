@@ -5,6 +5,8 @@ from rep.h2.db import tapd_db
 from rep.h2.model import tapd_model
 from dateutil.parser import parse
 
+other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000184"]
+
 t_list = []
 
 task_model_list = []
@@ -76,9 +78,11 @@ def getTask(start, end):
         time.sleep(1)
         task_arr = tapd_parse.get_date_tasks(date)
         for task in task_arr:
+            iteration_id = task['iteration_id']
+            if iteration_id in other_iteration:
+                continue
             t_list.append(task)
             story_id = task['story_id']
-            iteration_id = task['iteration_id']
             if story_id not in story_id_list and story_id is not None:
                 story_id_list.append(story_id)
             if iteration_id not in iteration_id_list and iteration_id is not None:
