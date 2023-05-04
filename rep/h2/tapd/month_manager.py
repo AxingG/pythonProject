@@ -80,9 +80,12 @@ def getTask(start, end):
         task_arr = tapd_parse.get_date_tasks(date)
         for task in task_arr:
             iteration_id = task['iteration_id']
+            task_owner = task['owner']
             if iteration_id in other_iteration:
                 continue
-            if task['owner'] in other_owner:
+            if ';' in task_owner:
+                task_owner = str(task_owner).replace(';', '')
+            if task_owner in other_owner:
                 continue
             t_list.append(task)
             story_id = task['story_id']
@@ -122,15 +125,15 @@ def deleteTask(start, end):
 
 
 # deleteTask(20230101, 20230228)
-getTask(20230401, 20230429)
+# getTask(20230407, 20230408)
 
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '李正祥'
-    owner_info.add_effort = 0
-    owner_info.leave_effort = 4
-    owner_info.time_at = 20230428
+    owner_info.owner = '王乐'
+    owner_info.add_effort = 8
+    owner_info.leave_effort = 0
+    owner_info.time_at = 20230410
     owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
