@@ -6,6 +6,7 @@ from rep.h2.model import tapd_model
 from dateutil.parser import parse
 
 other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000184"]
+other_owner = ["刘庆华", "史伟峰", "陈书秀", "周敬翔", "张益豪"]
 
 t_list = []
 
@@ -81,6 +82,8 @@ def getTask(start, end):
             iteration_id = task['iteration_id']
             if iteration_id in other_iteration:
                 continue
+            if task['owner'] in other_owner:
+                continue
             t_list.append(task)
             story_id = task['story_id']
             if story_id not in story_id_list and story_id is not None:
@@ -119,16 +122,16 @@ def deleteTask(start, end):
 
 
 # deleteTask(20230101, 20230228)
-# getTask(20230328, 20230329)
+getTask(20230401, 20230429)
 
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '赵嘉兴'
-    owner_info.add_effort = 8
-    owner_info.leave_effort = 0
-    owner_info.time_at = 20230322
-    owner_info.department = 1
+    owner_info.owner = '李正祥'
+    owner_info.add_effort = 0
+    owner_info.leave_effort = 4
+    owner_info.time_at = 20230428
+    owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
 # addOtherInfo()
