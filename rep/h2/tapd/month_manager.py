@@ -6,7 +6,10 @@ from rep.h2.model import tapd_model
 from dateutil.parser import parse
 
 other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000184"]
+# 产品
 other_owner = ["刘庆华", "史伟峰", "陈书秀", "周敬翔", "张益豪"]
+# 产品工时
+other_owner_effort = {}
 
 t_list = []
 
@@ -47,6 +50,10 @@ def initStory(story):
     if story_effort is None:
         return
     story_id = story['id']
+    # 需求工时减去产品工时
+    other_effort = other_owner_effort.setdefault(story_id, None)
+    if other_effort is not None:
+        story_effort = float(story_effort) - other_effort
     story_model = tapd_model.Story(story_id)
     story_model.iteration_id = story['iteration_id']
     story_model.name = story['name']
@@ -81,14 +88,19 @@ def getTask(start, end):
         for task in task_arr:
             iteration_id = task['iteration_id']
             task_owner = task['owner']
-            if iteration_id in other_iteration:
+            story_id = task['story_id']
+            effort = task['effort']
+            if iteration_id in other_iteration or effort is None:
                 continue
             if ';' in task_owner:
                 task_owner = str(task_owner).replace(';', '')
             if task_owner in other_owner:
+                # 记录产品任务总工时
+                other_effort = other_owner_effort.setdefault(story_id, 0)
+                other_effort = other_effort + float(effort)
+                other_owner_effort.update({story_id: other_effort})
                 continue
             t_list.append(task)
-            story_id = task['story_id']
             if story_id not in story_id_list and story_id is not None:
                 story_id_list.append(story_id)
             if iteration_id not in iteration_id_list and iteration_id is not None:
@@ -124,17 +136,17 @@ def deleteTask(start, end):
     tapd_db.deleteTaskByDate(start, end)
 
 
-# deleteTask(20230101, 20230228)
-# getTask(20230407, 20230408)
+# deleteTask(20230501, 20230501)
+# getTask(20230501, 20230532)
 
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '王奕娇'
-    owner_info.add_effort = 0
-    owner_info.leave_effort = 4
-    owner_info.time_at = 20230408
-    owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
+    owner_info.owner = '史伟峰'
+    owner_info.add_effort = 4
+    owner_info.leave_effort = 0
+    owner_info.time_at = 20230503
+    owner_info.department = 2  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
 # addOtherInfo()
