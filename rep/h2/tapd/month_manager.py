@@ -136,16 +136,15 @@ def deleteTask(start, end):
     tapd_db.deleteTaskByDate(start, end)
 
 
-# deleteTask(20230501, 20230501)
-# getTask(20230501, 20230532)
-
+# deleteTask(20230901, 20230931)
+# getTask(20230901, 20230931)
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '史伟峰'
-    owner_info.add_effort = 4
+    owner_info.owner = '张颖'
+    owner_info.add_effort = 8
     owner_info.leave_effort = 0
-    owner_info.time_at = 20230503
+    owner_info.time_at = 20230923
     owner_info.department = 2  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
