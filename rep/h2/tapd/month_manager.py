@@ -7,7 +7,7 @@ from dateutil.parser import parse
 
 other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000184"]
 # 产品
-other_owner = ["刘庆华", "史伟峰", "陈书秀", "周敬翔", "张益豪"]
+other_owner = ["刘庆华", "史伟峰", "陈书秀", "张益豪", "杨国花"]
 # 产品工时
 other_owner_effort = {}
 
@@ -136,16 +136,16 @@ def deleteTask(start, end):
     tapd_db.deleteTaskByDate(start, end)
 
 
-# deleteTask(20230901, 20230931)
-# getTask(20230901, 20230931)
+# deleteTask(20231001, 20231019)
+# getTask(20231007, 20231008) 整理到10月17日，从18日开始
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '张颖'
-    owner_info.add_effort = 8
-    owner_info.leave_effort = 0
-    owner_info.time_at = 20230923
-    owner_info.department = 2  # 1. 技术研发中心 2. 非技术研发中心
+    owner_info.owner = '乔天良'
+    owner_info.add_effort = 0
+    owner_info.leave_effort = 8
+    owner_info.time_at = 20231007
+    owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
 # addOtherInfo()
