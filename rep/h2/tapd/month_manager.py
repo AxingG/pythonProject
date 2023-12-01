@@ -4,7 +4,7 @@ from rep.h2.data import tapd_parse
 from rep.h2.db import tapd_db
 from rep.h2.model import tapd_model
 from dateutil.parser import parse
-
+# 需求池、线上问题 对应的4个迭代
 other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000184"]
 # 产品
 other_owner = ["刘庆华", "史伟峰", "陈书秀", "张益豪", "杨国花"]
@@ -136,16 +136,18 @@ def deleteTask(start, end):
     tapd_db.deleteTaskByDate(start, end)
 
 
-# deleteTask(20231001, 20231019)
-# getTask(20231007, 20231008) 整理到10月17日，从18日开始
+# deleteTask(20231013, 20231018)
+# getTask(20231101, 20231131)
+
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '乔天良'
+    owner_info.owner = '王奕娇'
     owner_info.add_effort = 0
-    owner_info.leave_effort = 8
-    owner_info.time_at = 20231007
+    owner_info.leave_effort = 0
+    owner_info.time_at = 20231125
     owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
+
 
 # addOtherInfo()
