@@ -30,6 +30,8 @@ task_update_sql = """update tapd_task set owner = %s, effort = %s, product_line 
 effort_insert_sql = """insert into tapd_effort(owner, add_effort, leave_effort, department, time_at, create_at, 
                         update_at) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
+developer_sign_insert_sql = """insert into tadp_developer_sign(owner, time, hour) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+
 data_delete_sql = """delete from tapd_task where begin >= %s and begin <= %s"""
 
 
@@ -122,6 +124,14 @@ def deleteTaskByDate(start, end):
 def ownerInsert(owner_info):
     db = mysql.connector.connect(**dbconfig)
     result = sql(db, effort_insert_sql,
+                 (owner_info.owner, owner_info.add_effort, owner_info.leave_effort, owner_info.department,
+                  owner_info.time_at, owner_info.create_at, owner_info.update_at))
+    print('owner_insert', result)
+
+
+def developerSignInsert(owner_info):
+    db = mysql.connector.connect(**dbconfig)
+    result = sql(db, developer_sign_insert_sql,
                  (owner_info.owner, owner_info.add_effort, owner_info.leave_effort, owner_info.department,
                   owner_info.time_at, owner_info.create_at, owner_info.update_at))
     print('owner_insert', result)
