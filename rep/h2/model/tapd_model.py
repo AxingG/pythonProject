@@ -1,4 +1,5 @@
 import time
+from rep.h2.util.timer import time_to_seconds, struct_time_3, struct_time_4
 
 
 class Iteration:
@@ -105,3 +106,84 @@ class Owner:
     def __init__(self):
         self.create_at = int(time.time())
         self.update_at = int(time.time())
+
+
+class Developer:
+    name = str
+    # 当月一共打卡多久
+    hour = float
+    # 哪个月 201312
+    time = int
+    # 每月日期列表，里面放打过卡的日期
+    data = []
+    # 打卡时间列表，里面放 打过卡日期 对应的打卡数据
+    sign_time = {}
+
+    def __init__(self, init_name, init_date, init_time):
+        self.time = struct_time_4(init_date)
+        self.name = init_name
+        self.sign_time = {}
+        date_str = struct_time_3(init_date)
+        self.date = [date_str]
+        self._add_time(date_str, init_time)
+
+    def check_date(self, new_date, new_time):
+        date_str = struct_time_3(new_date)
+        if date_str not in self.date:
+            self.date.append(date_str)
+        self._add_time(date_str, new_time)
+
+    def _add_time(self, new_date, new_time):
+        check_second = time_to_seconds("14:00:00")
+        new_second = time_to_seconds(new_time)
+        if new_second > check_second:
+            # 下班打卡
+            time_key = new_date + "_下班"
+        else:
+            # 上班打卡
+            time_key = new_date + "_上班"
+
+        if time_key not in self.sign_time:
+            # 没有key
+            self.sign_time[time_key] = new_second
+        else:
+            ori_second = time_to_seconds(self.sign_time[time_key])
+            if '上班' in time_key:
+                # 上班，谁小用谁
+                self.sign_time[time_key] = min(ori_second, new_second)
+            else:
+                # 下班，谁大用谁
+                self.sign_time[time_key] = max(ori_second, new_second)
+
+    def get_hour(self):
+        total_seconds = 0
+        for value in self.date:
+            if value + "_上班" not in self.sign_time:
+                self.sign_time[value + "_上班"] = time_to_seconds('13:30:00')
+            elif value + "_下班" not in self.sign_time:
+                self.sign_time[value + "_下班"] = time_to_seconds('12:00:00')
+            up_time = self.sign_time.get(value + "_上班")
+            down_time = self.sign_time.get(value + "_下班")
+            total_seconds += down_time - up_time - time_to_seconds('01:30:00')
+        # self.name 和 total_seconds 是名字和hour
+        self.hour = round(total_seconds / 3600, 2)
+
+
+class Sign:
+    owner = str
+    time_at = int
+    hour = float
+    create_at = int
+    update_at = int
+
+    def __init__(self):
+        self.create_at = int(time.time())
+        self.update_at = int(time.time())
+
+    def checkInfo(self, tup):
+        print(tup)
+        if len(tup) != 6:
+            return True
+        if self.hour != tup[3]:
+            return True
+        return False

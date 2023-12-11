@@ -8,31 +8,34 @@ dbconfig = {
     'database': 'serverops',
 }
 
-iteration_select_sql = "select * from tapd_iteration where iteration_id = %s"
+iteration_select_sql = """select * from tapd_iteration where iteration_id = %s"""
 iteration_insert_sql = """insert into tapd_iteration(iteration_id, name, start, end, created_at, update_at)
                      VALUES (%s, %s, %s, %s, %s, %s)"""
 iteration_update_sql = """update tapd_iteration set name = %s, start = %s, end = %s, update_at = %s
                         WHERE iteration_id = %s"""
 
-story_select_sql = "select * from tapd_story where story_id = %s"
+story_select_sql = """select * from tapd_story where story_id = %s"""
 story_insert_sql = """insert into tapd_story(story_id, iteration_id, name, effort, product_line, product_type, 
                      created_at, update_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
 story_update_sql = """update tapd_story set iteration_id = %s, name = %s, effort = %s, product_line = %s, 
                         product_type = %s, update_at = %s WHERE story_id = %s"""
 
-task_select_sql = "select * from tapd_task where task_id = %s"
+task_select_sql = """select * from tapd_task where task_id = %s"""
 task_insert_sql = """insert into tapd_task(task_id, owner, effort, product_line,
                       product_type, story_id, iteration_id, created_at, update_at, begin, due)
                      VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 task_update_sql = """update tapd_task set owner = %s, effort = %s, product_line = %s, product_type = %s, 
                         story_id = %s, iteration_id = %s, update_at = %s, begin = %s, due = %s WHERE task_id = %s"""
+task_delete_sql = """delete from tapd_task where begin >= %s and begin <= %s"""
 
 effort_insert_sql = """insert into tapd_effort(owner, add_effort, leave_effort, department, time_at, create_at, 
                         update_at) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
 
-developer_sign_insert_sql = """insert into tadp_developer_sign(owner, time, hour) VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-
-data_delete_sql = """delete from tapd_task where begin >= %s and begin <= %s"""
+sign_select_sql = """select * from tapd_developer_sign where owner = %s and time_at = %s"""
+sign_insert_sql = """insert into tapd_developer_sign(owner, time_at, hour, create_at, update_at) 
+                     VALUES (%s, %s, %s, %s, %s)"""
+sign_update_sql = """update tapd_developer_sign set hour = %s, update_at = %s WHERE owner = %s AND time_at = %s"""
+sign_delete_sql = """delete from tapd_developer_sign where time_at = %s"""
 
 
 def iterationInsertOrUpdate(iterations):
@@ -117,7 +120,7 @@ def deleteTaskByDate(start, end):
         print("时间错误")
         return
     db = mysql.connector.connect(**dbconfig)
-    result = sql(db, data_delete_sql, (start, end))
+    result = sql(db, task_delete_sql, (start, end))
     print('task_delete', result)
 
 
@@ -129,12 +132,32 @@ def ownerInsert(owner_info):
     print('owner_insert', result)
 
 
-def developerSignInsert(owner_info):
+def developerSignInsert(signs):
     db = mysql.connector.connect(**dbconfig)
-    result = sql(db, developer_sign_insert_sql,
-                 (owner_info.owner, owner_info.add_effort, owner_info.leave_effort, owner_info.department,
-                  owner_info.time_at, owner_info.create_at, owner_info.update_at))
-    print('owner_insert', result)
+    course = db.cursor()
+    for sign in signs:
+        course.execute(sign_select_sql, (sign.owner, sign.time_at))
+        result = course.fetchone()
+        if result is None:
+            # insert 数据
+            result = sql(db, sign_insert_sql, (sign.owner, sign.time_at, sign.hour, sign.create_at, sign.update_at))
+            print('sign_insert', sign.owner, sign.time_at, sign.hour, sign.create_at, sign.update_at, result)
+        elif sign.checkInfo(result):
+            # update 数据
+            result = sql(db, sign_update_sql, (sign.hour, sign.update_at, sign.owner, sign.time_at))
+            print('sign_update', sign.owner, sign.time_at, sign.hour, result)
+        else:
+            print('sign_none', sign.owner, sign.time_at, sign.hour)
+    db.close()
+
+
+def deleteSignByDate(time_at):
+    if time_at == 0:
+        print("时间错误")
+        return
+    db = mysql.connector.connect(**dbconfig)
+    result = sql(db, sign_delete_sql, (time_at,))
+    print('sign_delete', result)
 
 
 def sql(db, operation, params=()):
