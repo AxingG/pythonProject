@@ -24,6 +24,9 @@ def find_project_root():
 def excel_data():
     # 文档数据
     file_path = find_project_root() + '/develop_data.xlsx'
+    if not os.path.exists(file_path):
+        print('文件不存在！')
+        return
     name = '姓名'
     date = '打卡日期'
     time = '打卡时间'
