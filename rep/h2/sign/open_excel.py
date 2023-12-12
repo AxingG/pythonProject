@@ -42,6 +42,8 @@ def excel_data():
         time_value = row[time]
         if name_value in other:
             continue
+        if name_value == '高强强':
+            name_value = '高强'
         if name_value not in developer:
             developer[name_value] = tapd_model.Developer(name_value, date_value, time_value)
         else:
