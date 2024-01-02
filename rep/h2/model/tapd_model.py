@@ -158,13 +158,19 @@ class Developer:
     def get_hour(self):
         total_seconds = 0
         for value in self.date:
+            half_day = False
             if value + "_上班" not in self.sign_time:
                 self.sign_time[value + "_上班"] = time_to_seconds('13:30:00')
+                half_day = True
             elif value + "_下班" not in self.sign_time:
                 self.sign_time[value + "_下班"] = time_to_seconds('12:00:00')
+                half_day = True
             up_time = self.sign_time.get(value + "_上班")
             down_time = self.sign_time.get(value + "_下班")
-            total_seconds += down_time - up_time - time_to_seconds('01:30:00')
+            if half_day:
+                total_seconds += down_time - up_time
+            else:
+                total_seconds += down_time - up_time - time_to_seconds('01:30:00')
         # self.name 和 total_seconds 是名字和hour
         self.hour = round(total_seconds / 3600, 2)
 
