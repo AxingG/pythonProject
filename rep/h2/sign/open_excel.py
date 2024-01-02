@@ -33,7 +33,7 @@ def excel_data():
     selected_columns = [name, date, time]
     # 员工数据
     developer = {}
-    other = ['温旭峰', '柳诗尧', '赵嘉兴']
+    other = ['温旭峰', '柳诗尧', '赵嘉兴', '项朝龙']
     # 处理excel
     df = pd.read_excel(file_path, usecols=selected_columns)
     for index, row in df.iterrows():
