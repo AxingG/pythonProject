@@ -4,6 +4,7 @@ from rep.h2.data import tapd_parse
 from rep.h2.db import tapd_db
 from rep.h2.model import tapd_model
 from dateutil.parser import parse
+
 # 需求池、线上问题 对应的4个迭代
 other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000184"]
 # 产品
@@ -94,8 +95,6 @@ def getTask(start, end):
             effort = task['effort']
             if iteration_id in other_iteration or effort is None:
                 continue
-            if task_owner in task_other_owner:
-                continue
             if ';' in task_owner:
                 task_owner = str(task_owner).replace(';', '')
             if task_owner in other_owner:
@@ -103,6 +102,8 @@ def getTask(start, end):
                 other_effort = other_owner_effort.setdefault(story_id, 0)
                 other_effort = other_effort + float(effort)
                 other_owner_effort.update({story_id: other_effort})
+                continue
+            if task_owner in task_other_owner:
                 continue
             t_list.append(task)
             if story_id not in story_id_list and story_id is not None:
@@ -153,5 +154,4 @@ def addOtherInfo():
     owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
-
-addOtherInfo()
+# addOtherInfo()
