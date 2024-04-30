@@ -6,7 +6,14 @@ from rep.h2.model import tapd_model
 from dateutil.parser import parse
 
 # 需求池、线上问题 对应的4个迭代
-other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000184"]
+# DY-需求池    1131316618001000423
+# D-需求池     1131316618001000424
+# π-需求池     1131316618001000425
+# S-需求池     1131316618001000532
+# 线上跟进     1131316618001000184
+# 机动需求     1131316618001000568
+other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000532",
+                   "1131316618001000184", "1131316618001000568"]
 # 产品
 other_owner = ["刘庆华", "史伟峰", "张益豪", "杨国花"]
 # 产品工时
@@ -19,6 +26,8 @@ t_list = []
 task_model_list = []
 story_model_list = []
 iteration_model_list = []
+
+owner_effort = {}
 
 
 def initTask(story):
@@ -127,8 +136,17 @@ def getTask(start, end):
             print('迭代有问题', it_id)
             continue
         initIteration(iteration)
-
-    insertDB()
+        #
+        # for task in task_model_list:
+        #     key = task.owner + "_" + task.product_line
+        #     if key in owner_effort:
+        #         owner_effort[key] += task.effort
+        #     else:
+        #         owner_effort[key] = task.effort
+        #
+        # for key, value in owner_effort.items():
+        #     print(key, value)
+        insertDB()
     return
 
 
@@ -141,17 +159,17 @@ def deleteTask(start, end):
     tapd_db.deleteTaskByDate(start, end)
 
 
-# deleteTask(20240101, 20240132)
-# getTask(20240201, 20240230)
+# deleteTask(20240301, 20240332)
+# getTask(20240301, 20240332)
 
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '马廉'
-    owner_info.add_effort = 0
-    owner_info.leave_effort = 4
-    owner_info.time_at = 20240202
-    owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
+    owner_info.owner = '项朝龙'
+    owner_info.add_effort = 8
+    owner_info.leave_effort = 0
+    owner_info.time_at = 20240301
+    owner_info.department = 2  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
 # addOtherInfo()
