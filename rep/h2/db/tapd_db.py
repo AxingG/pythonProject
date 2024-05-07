@@ -51,7 +51,7 @@ def iterationInsertOrUpdate(iterations):
             # insert 数据
             result = sql(db, iteration_insert_sql, (iteration.iteration_id, iteration.name, iteration.start,
                                                     iteration.end, iteration.created_at, iteration.update_at))
-            print('iteration_insert', iteration.iteration_id, result)
+            print('iteration_insert', iteration.iteration_id, iteration.name, result)
         elif iteration.checkInfo(result):
             # update 数据
             result = sql(db, iteration_update_sql, (iteration.name, iteration.start, iteration.end,
@@ -76,7 +76,7 @@ def storyInsertOrUpdate(storys):
             result = sql(db, story_insert_sql, (story.story_id, story.iteration_id, story.name, story.effort,
                                                 story.product_line, story.product_type, story.created_at,
                                                 story.update_at))
-            print('story_insert', story.story_id, result)
+            print('story_insert', story.story_id, story.name, result)
         elif story.checkInfo(result):
             # update 数据
             result = sql(db, story_update_sql, (story.iteration_id, story.name, story.effort, story.product_line,

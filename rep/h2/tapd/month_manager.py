@@ -93,16 +93,20 @@ def insertDB():
 def getTask(start, end):
     story_id_list = []
     iteration_id_list = []
+    num_plus = 0
     for num in range(start, end):
         date = parse(str(num))
         time.sleep(1)
         task_arr = tapd_parse.get_date_tasks(date)
+        num_plus += len(task_arr)
+        print(num, len(task_arr), num_plus)
         for task in task_arr:
             iteration_id = task['iteration_id']
             task_owner = task['owner']
             story_id = task['story_id']
             effort = task['effort']
             if iteration_id in other_iteration or effort is None:
+                print('异常任务:', iteration_id, task_owner, story_id, effort)
                 continue
             if ';' in task_owner:
                 task_owner = str(task_owner).replace(';', '')
@@ -136,17 +140,8 @@ def getTask(start, end):
             print('迭代有问题', it_id)
             continue
         initIteration(iteration)
-        #
-        # for task in task_model_list:
-        #     key = task.owner + "_" + task.product_line
-        #     if key in owner_effort:
-        #         owner_effort[key] += task.effort
-        #     else:
-        #         owner_effort[key] = task.effort
-        #
-        # for key, value in owner_effort.items():
-        #     print(key, value)
-        insertDB()
+
+    insertDB()
     return
 
 
@@ -159,17 +154,17 @@ def deleteTask(start, end):
     tapd_db.deleteTaskByDate(start, end)
 
 
-# deleteTask(20240301, 20240332)
-# getTask(20240301, 20240332)
+# deleteTask(20240401, 20240431)
+getTask(20240401, 20240431)
 
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '项朝龙'
-    owner_info.add_effort = 8
-    owner_info.leave_effort = 0
-    owner_info.time_at = 20240301
-    owner_info.department = 2  # 1. 技术研发中心 2. 非技术研发中心
+    owner_info.owner = '高启航'
+    owner_info.add_effort = 0
+    owner_info.leave_effort = 80
+    owner_info.time_at = 20240401
+    owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
 # addOtherInfo()

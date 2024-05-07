@@ -28,8 +28,8 @@ def excel_data():
         print('文件不存在！')
         return
     name = '姓名'
-    date = '打卡日期'
-    time = '打卡时间'
+    date = '日期'
+    time = '时长'
     selected_columns = [name, date, time]
     # 员工数据
     developer = {}
@@ -44,18 +44,23 @@ def excel_data():
             continue
         if name_value == '高强强':
             name_value = '高强'
-        if name_value not in developer:
-            developer[name_value] = tapd_model.Developer(name_value, date_value, time_value)
-        else:
-            developer[name_value].check_date(date_value, time_value)
-    for key, dev in developer.items():
-        dev.get_hour()
         sign_model = tapd_model.Sign()
-        sign_model.owner = key
-        sign_model.time_at = dev.time
-        sign_model.hour = dev.hour
+        sign_model.owner = name_value
+        sign_model.time_at = date_value
+        sign_model.hour = time_value
         sign_list.append(sign_model)
+        print(sign_model.owner, sign_model.time_at, sign_model.hour)
     tapd_db.developerSignInsert(sign_list)
 
+# excel_data()
 
-excel_data()
+
+def single():
+    sign_model = tapd_model.Sign()
+    sign_model.owner = '高启航'
+    sign_model.time_at = 202404
+    sign_model.hour = 104
+    sign_list.append(sign_model)
+    tapd_db.developerSignInsert(sign_list)
+
+# single()
