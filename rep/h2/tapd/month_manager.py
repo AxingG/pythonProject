@@ -15,11 +15,11 @@ from dateutil.parser import parse
 other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000532",
                    "1131316618001000184", "1131316618001000568"]
 # 产品
-other_owner = ["刘庆华", "史伟峰", "张益豪", "杨国花"]
+other_owner = ["刘庆华", "贾若晨", "张益豪", "杨国花"]
 # 产品工时
 other_owner_effort = {}
-# 技术不参与排期的
-task_other_owner = ["赵嘉兴", "温旭峰", "柳诗尧"]
+# # 技术不参与排期的
+# task_other_owner = ["赵嘉兴", "温旭峰", "柳诗尧"]
 
 t_list = []
 
@@ -116,8 +116,8 @@ def getTask(start, end):
                 other_effort = other_effort + float(effort)
                 other_owner_effort.update({story_id: other_effort})
                 continue
-            if task_owner in task_other_owner:
-                continue
+            # if task_owner in task_other_owner:
+            #     continue
             t_list.append(task)
             if story_id not in story_id_list and story_id is not None:
                 story_id_list.append(story_id)
@@ -154,17 +154,17 @@ def deleteTask(start, end):
     tapd_db.deleteTaskByDate(start, end)
 
 
-# deleteTask(20240401, 20240431)
-getTask(20240501, 20240511)
+# deleteTask(20240501, 20240532)
+# getTask(20240501, 20240502)
 
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '项朝龙'
-    owner_info.add_effort = 52
-    owner_info.leave_effort = 0
-    owner_info.time_at = 20240401
-    owner_info.department = 2  # 1. 技术研发中心 2. 非技术研发中心
+    owner_info.owner = '徐培帅'
+    owner_info.add_effort = 0
+    owner_info.leave_effort = 8
+    owner_info.time_at = 20240501
+    owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
 # addOtherInfo()

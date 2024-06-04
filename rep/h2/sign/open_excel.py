@@ -57,9 +57,9 @@ def excel_data():
 
 def single():
     sign_model = tapd_model.Sign()
-    sign_model.owner = '高启航'
-    sign_model.time_at = 202404
-    sign_model.hour = 104
+    sign_model.owner = '乔天良'
+    sign_model.time_at = 202405
+    sign_model.hour = 198.6
     sign_list.append(sign_model)
     tapd_db.developerSignInsert(sign_list)
 
