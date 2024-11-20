@@ -5,21 +5,18 @@ from rep.h2.db import tapd_db
 from rep.h2.model import tapd_model
 from dateutil.parser import parse
 
-# 需求池、线上问题 对应的4个迭代
+# 需求池、线上问题 对应的7个迭代
 # DY-需求池    1131316618001000423
 # D-需求池     1131316618001000424
 # π-需求池     1131316618001000425
 # S-需求池     1131316618001000532
 # 线上跟进     1131316618001000184
 # 机动需求     1131316618001000568
+# 产品工作     1131316618001000568
 other_iteration = ["1131316618001000423", "1131316618001000424", "1131316618001000425", "1131316618001000532",
-                   "1131316618001000184", "1131316618001000568"]
-# 产品
-other_owner = ["刘庆华", "贾若晨", "张益豪", "杨国花"]
-# 产品工时
-other_owner_effort = {}
-# # 技术不参与排期的
-# task_other_owner = ["赵嘉兴", "温旭峰", "柳诗尧"]
+                   "1131316618001000184", "1131316618001000568", "1131316618001000626"]
+# 不参与阿米巴的
+task_other_owner = ["刘庆华", "贾若晨", "张益豪", "杨国花", "张颖", "谢彩云", "邹鑫", "郭军辉", "徐锦艳", "梁江苗"]
 
 t_list = []
 
@@ -62,10 +59,6 @@ def initStory(story):
     if story_effort is None:
         return
     story_id = story['id']
-    # 需求工时减去产品工时
-    other_effort = other_owner_effort.setdefault(story_id, None)
-    if other_effort is not None:
-        story_effort = float(story_effort) - other_effort
     story_model = tapd_model.Story(story_id)
     story_model.iteration_id = story['iteration_id']
     story_model.name = story['name']
@@ -81,6 +74,7 @@ def initIteration(iteration):
     iteration_model.name = iteration['name']
     iteration_model.start = int(str(iteration['startdate']).replace('-', ''))
     iteration_model.end = int(str(iteration['enddate']).replace('-', ''))
+    print(iteration_id, iteration_model.name)
     iteration_model_list.append(iteration_model)
 
 
@@ -91,6 +85,9 @@ def insertDB():
 
 
 def getTask(start, end):
+    # 清除历史记录
+    deleteTask(start, end)
+    # 执行查询插入操作
     story_id_list = []
     iteration_id_list = []
     num_plus = 0
@@ -110,14 +107,10 @@ def getTask(start, end):
                 continue
             if ';' in task_owner:
                 task_owner = str(task_owner).replace(';', '')
-            if task_owner in other_owner:
-                # 记录产品任务总工时
-                other_effort = other_owner_effort.setdefault(story_id, 0)
-                other_effort = other_effort + float(effort)
-                other_owner_effort.update({story_id: other_effort})
+            if task_owner in task_other_owner:
                 continue
-            # if task_owner in task_other_owner:
-            #     continue
+            if task_owner == "马廉":
+                print(task['effort'], task['begin'], task['name'])
             t_list.append(task)
             if story_id not in story_id_list and story_id is not None:
                 story_id_list.append(story_id)
@@ -154,17 +147,16 @@ def deleteTask(start, end):
     tapd_db.deleteTaskByDate(start, end)
 
 
-# deleteTask(20240501, 20240532)
-# getTask(20240501, 20240502)
+getTask(20240101, 20240132)
 
 
 def addOtherInfo():
     owner_info = tapd_model.Owner()
-    owner_info.owner = '徐培帅'
-    owner_info.add_effort = 0
-    owner_info.leave_effort = 8
-    owner_info.time_at = 20240501
-    owner_info.department = 1  # 1. 技术研发中心 2. 非技术研发中心
+    owner_info.owner = '赵嘉兴'
+    owner_info.add_effort = 13
+    owner_info.leave_effort = 0
+    owner_info.time_at = 20241001
+    owner_info.department = 2  # 1. 技术研发中心 2. 非技术研发中心
     tapd_db.ownerInsert(owner_info)
 
 # addOtherInfo()
