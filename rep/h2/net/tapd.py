@@ -25,18 +25,6 @@ def get_iteration(iteration_id):
     return response.text
 
 
-def get_open_iteration():
-    url = api + 'iterations'
-    param = {
-        'limit': 20,
-        'status': "open",
-        'order': "startdate desc",
-        'workspace_id': workspace_id,
-    }
-    response = requests.get(url, params=param, headers=head, auth=(account, password))
-    return response.text
-
-
 # 获取需求列表
 def get_story(story_id):
     url = api + 'stories'

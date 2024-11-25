@@ -24,9 +24,6 @@ task_model_list = []
 story_model_list = []
 iteration_model_list = []
 
-owner_effort = {}
-
-
 def initTask(story):
     story_id = story['id']
     product_line = story['custom_field_six']

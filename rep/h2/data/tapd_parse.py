@@ -17,16 +17,6 @@ def get_task_iteration(iteration_id):
             return data['Iteration']
 
 
-def get_open_iteration():
-    result = tapd.get_open_iteration()
-    res_dict = json.loads(result)
-    iteration_arr = []
-    if 'data' in res_dict:
-        for data in res_dict['data']:
-            iteration_arr.append(data)
-    return iteration_arr
-
-
 # 获取迭代需求列表
 def get_task_story(story_id):
     result = tapd.get_story(story_id)
@@ -34,25 +24,6 @@ def get_task_story(story_id):
     if 'data' in res_dict:
         for story in res_dict['data']:
             return story['Story']
-
-
-# 获取需求任务列表
-def get_tasks(owner):
-    result = tapd.get_tasks(owner)
-    result_dict = json.loads(result)
-    task_arr = []
-    if 'error_msg' in result_dict:
-        print(result_dict, owner)
-        return task_arr
-    if 'data' not in result_dict:
-        return task_arr
-    result_data = result_dict['data']
-    for data in result_data:
-        task = data['Task']
-        task_arr.append(task)
-
-    return task_arr
-
 
 # 获取需求任务列表
 def get_date_tasks(date):
